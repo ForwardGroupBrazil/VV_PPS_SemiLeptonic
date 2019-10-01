@@ -190,6 +190,7 @@ class MakeNTuple : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
 		std::vector<double> *muon_vtxZ      = new std::vector<double> ();
 		std::vector<double> *muon_phi       = new std::vector<double> ();
 		std::vector<double> *muon_eta       = new std::vector<double> ();
+                std::vector<double> *muon_charge     = new std::vector<double> ();
 		std::vector<double> *muon_PFBasedIso     = new std::vector<double> ();
 		std::vector<double> *muon_TrackBasedIso     = new std::vector<double> ();
 		std::vector<bool> *muon_isTightMuon     = new std::vector<bool> ();
@@ -206,6 +207,7 @@ class MakeNTuple : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
 		std::vector<double> *electron_vtxZ      = new std::vector<double> ();
 		std::vector<double> *electron_phi       = new std::vector<double> ();
 		std::vector<double> *electron_eta       = new std::vector<double> ();
+                std::vector<double> *electron_charge       = new std::vector<double> ();
 		std::vector<bool> *electron_isTightElectron     = new std::vector<bool> ();
 		std::vector<bool> *electron_isMediumElectron     = new std::vector<bool> ();
 		std::vector<bool> *electron_isLooseElectron     = new std::vector<bool> ();
@@ -409,6 +411,7 @@ MakeNTuple::MakeNTuple(const edm::ParameterSet& iConfig):
 	EventBranchs->Branch("muon_vtxZ","std::vector<double>",&muon_vtxZ);
 	EventBranchs->Branch("muon_phi","std::vector<double>",&muon_phi);
 	EventBranchs->Branch("muon_eta","std::vector<double>",&muon_eta);
+        EventBranchs->Branch("muon_charge","std::vector<double>",&muon_charge);
 	EventBranchs->Branch("muon_PFBasedIso","std::vector<double>",&muon_PFBasedIso);
 	EventBranchs->Branch("muon_TrackBasedIso","std::vector<double>",&muon_TrackBasedIso);
 	EventBranchs->Branch("muon_isTightMuon","std::vector<bool>",&muon_isTightMuon);
@@ -424,6 +427,7 @@ MakeNTuple::MakeNTuple(const edm::ParameterSet& iConfig):
 	EventBranchs->Branch("electron_vtxZ","std::vector<double>",&electron_vtxZ);
 	EventBranchs->Branch("electron_phi","std::vector<double>",&electron_phi);
 	EventBranchs->Branch("electron_eta","std::vector<double>",&electron_eta);
+        EventBranchs->Branch("electron_charge","std::vector<double>",&electron_charge);
 	EventBranchs->Branch("electron_isTightElectron","std::vector<bool>",&electron_isTightElectron);
 	EventBranchs->Branch("electron_isMediumElectron","std::vector<bool>",&electron_isMediumElectron);
 	EventBranchs->Branch("electron_isLooseElectron","std::vector<bool>",&electron_isLooseElectron);
@@ -574,6 +578,7 @@ MakeNTuple::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	muon_vtxZ->clear();
 	muon_phi->clear();
 	muon_eta->clear();
+        muon_charge->clear();
 	muon_PFBasedIso->clear();
 	muon_TrackBasedIso->clear();
 	muon_isTightMuon->clear();
@@ -588,6 +593,7 @@ MakeNTuple::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	electron_vtxZ->clear();
 	electron_phi->clear();
 	electron_eta->clear();
+        electron_charge->clear();
 	electron_isTightElectron->clear();
 	electron_isMediumElectron->clear();
 	electron_isLooseElectron->clear();
@@ -999,6 +1005,7 @@ MakeNTuple::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			muon_vtxZ->push_back(muons->at(i).vertex().z());
 			muon_phi->push_back(muons->at(i).phi());
 			muon_eta->push_back(muons->at(i).eta());
+                        muon_charge->push_back(muons->at(i).charge());
 			muon_PFBasedIso->push_back((muons->at(i).pfIsolationR04().sumChargedHadronPt + max(0., muons->at(i).pfIsolationR04().sumNeutralHadronEt + muons->at(i).pfIsolationR04().sumPhotonEt - 0.5*muons->at(i).pfIsolationR04().sumPUPt))/muons->at(i).pt());
 			muon_TrackBasedIso->push_back((muons->at(i).isolationR03().sumPt)/(muons->at(i).pt()));
 			muon_isTightMuon->push_back(muon::isTightMuon(muons->at(i), vertices->at(0)));
@@ -1017,6 +1024,7 @@ MakeNTuple::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			electron_vtxZ->push_back(electrons->at(i).vertex().z());
 			electron_phi->push_back(electrons->at(i).phi());
 			electron_eta->push_back(electrons->at(i).eta());
+                        electron_charge->push_back(electrons->at(i).charge());
 			if(YEAR==2016){
 				electron_isTightElectron->push_back(electrons->at(i).electronID("cutBasedElectronID-Summer16-80X-V1-tight"));
 				electron_isMediumElectron->push_back(electrons->at(i).electronID("cutBasedElectronID-Summer16-80X-V1-medium"));
